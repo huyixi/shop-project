@@ -13,20 +13,40 @@ export default new VueRouter({
   // 编写路由规则
   routes: [
     {
-      path: "/home",
-      component: Home,
+      path: "/",
+      redirect: "/home",
+      meta: {
+        show: true,
+      },
     },
     {
-      path: "/search",
+      path: "/home",
+      component: Home,
+      meta: {
+        show: true,
+      },
+    },
+    {
+      path: "/search/:keyword",
+      name: "search",
       component: Search,
+      meta: {
+        show: true,
+      },
     },
     {
       path: "/registry",
       component: Registry,
+      meta: {
+        show: false,
+      },
     },
     {
       path: "/login",
       component: Login,
+      meta: {
+        show: false,
+      },
     },
   ],
 });

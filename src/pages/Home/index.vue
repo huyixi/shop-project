@@ -1,11 +1,39 @@
 <template>
-  <div>我是Home组件</div>
+  <div>
+    <TypeNav></TypeNav>
+    <ListContainer></ListContainer>
+    <Rank></Rank>
+    <Like></Like>
+    <Recommend></Recommend>
+    <Floor></Floor>
+    <Floor></Floor>
+    <Brand></Brand>
+  </div>
 </template>
 
 <script>
+import TypeNav from "@/components/TypeNav/";
+import ListContainer from "./ListContainer/index.vue";
+import Rank from "./Rank/index.vue";
+import Like from "./Like/index.vue";
+import Recommend from "./Recommend/index.vue";
+import Floor from "./Floor/index.vue";
+import Brand from "./Brand/index.vue";
+
 export default {
   name: "Home",
+  components: {
+    TypeNav,
+    ListContainer,
+    Rank,
+    Like,
+    Recommend,
+    Brand,
+    Brand,
+    Recommend,
+    Floor,
+  },
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="less"></style>
