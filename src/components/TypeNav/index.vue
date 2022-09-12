@@ -1,6 +1,6 @@
 <template>
   <div class="type-nav">
-    <div class="container">
+    <div class="container" @mouseleave="leaveIndex">
       <h2 class="all">全部商品分类</h2>
       <nav class="nav">
         <a href="###">服装城</a>
@@ -17,12 +17,16 @@
           <div
             class="item"
             v-for="(c1, index) in categoryList"
-            :key="'c1.categoryId'"
+            :key="c1.categoryId"
+            :class="{ addbgc: currentIndex == index }"
           >
-            <h3>
-              <a href="">{{ c1.categoryName }}</a>
+            <h3 @mouseenter="enterIndex(index)">
+              <a href="">{{ c1.categoryName }}---{{ index }}</a>
             </h3>
-            <div class="item-list clearfix">
+            <div
+              class="item-list clearfix"
+              :style="{ display: currentIndex == index ? 'block' : 'none' }"
+            >
               <div
                 class="subitem"
                 v-for="(c2, index) in c1.categoryChild"
@@ -52,16 +56,43 @@
 
 <script>
 import { mapState } from "vuex";
+import throttle from "lodash/throttle";
 export default {
   name: "TypeNav",
+  data() {
+    return {
+      currentIndex: "-1",
+    };
+  },
   mounted() {
     this.$store.dispatch("getCategoryList");
-    this.$store.dispatch("getMyCategoryList");
+    // this.$store.dispatch("getMyCategoryList");
   },
   computed: {
     ...mapState({
       categoryList: (state) => state.home.categoryList,
     }),
+  },
+  methods: {
+    //防抖
+    enterIndex: throttle(function (index) {
+      this.currentIndex = index;
+      console.log("currentIndex" + this.currentIndex);
+    }, 50),
+    // _.debounce(function () {
+
+    // },1000),
+    //鼠标一进入就修改currentIndex值
+
+    // enterIndex(index) {
+    //   this.currentIndex = index;
+    //   console.log("currentIndex" + this.currentIndex);
+    // },
+    //鼠标移除修改currentIndex值
+    leaveIndex() {
+      this.currentIndex = -1;
+      console.log("leave  currentIndex" + this.currentIndex);
+    },
   },
 };
 </script>
@@ -102,7 +133,7 @@ export default {
       left: 0;
       top: 45px;
       width: 210px;
-      height: 461px;
+      height: 462px;
       position: absolute;
       background: #fafafa;
       z-index: 999;
@@ -110,7 +141,7 @@ export default {
       .all-sort-list2 {
         .item {
           h3 {
-            line-height: 30px;
+            line-height: 28px;
             font-size: 14px;
             font-weight: 400;
             overflow: hidden;
@@ -176,11 +207,14 @@ export default {
             }
           }
 
-          &:hover {
-            .item-list {
-              display: block;
-            }
-          }
+          // &:hover {
+          //   .item-list {
+          //     display: block;
+          //   }
+          // }
+        }
+        .addbgc {
+          background-color: skyblue;
         }
       }
     }

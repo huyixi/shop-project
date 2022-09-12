@@ -2,9 +2,9 @@
   <div>
     <TypeNav></TypeNav>
     <ListContainer></ListContainer>
+    <Recommend></Recommend>
     <Rank></Rank>
     <Like></Like>
-    <Recommend></Recommend>
     <Floor></Floor>
     <Floor></Floor>
     <Brand></Brand>
