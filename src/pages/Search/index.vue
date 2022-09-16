@@ -1,19 +1,18 @@
 <template>
   <div>
-    <h1>我是search组件</h1>
-    <h1>我是params参数----{{ $route.params.keyword }}</h1>
-    <h1>我是query参数---{{ $route.query.k }}</h1>
+    <!-- 这是Search模块 -->
+    <TypeNav></TypeNav>
   </div>
 </template>
 
 <script>
+import TypeNav from "@/components/TypeNav/index.vue";
 export default {
   name: "Search",
   data() {
-    return {
-      k: "1",
-    };
+    return {};
   },
+  components: { TypeNav },
 };
 </script>
 

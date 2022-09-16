@@ -5,11 +5,11 @@ import floors from "./floors.json";
 import myCategoryList from "./myCategoryList.json";
 
 //mock数据:参数:请求地址,请求的数据
-Mock.mock("/mock/banner", {
+Mock.mock("/mock/banners", {
   code: 200,
   data: banners,
 });
-Mock.mock("/mock/floors", {
+Mock.mock("/mock/floorList", {
   code: 200,
   data: floors,
 });

@@ -1,7 +1,62 @@
 <template>
   <div class="type-nav">
-    <div class="container" @mouseleave="leaveIndex">
-      <h2 class="all">全部商品分类</h2>
+    <div class="container">
+      <div @mouseenter="enterSort" @mouseleave="leaveSort">
+        <h2 class="all">全部商品分类</h2>
+        <!-- 过渡动画 -->
+        <transition name="sort">
+          <div class="sort" v-show="sortShow">
+            <div class="all-sort-list2" @click="goSearch">
+              <div
+                class="item"
+                v-for="(c1, index) in categoryList"
+                :key="c1.categoryId"
+                :class="{ addbgc: currentIndex == index }"
+              >
+                <h3 @mouseenter="enterIndex(index)">
+                  <a
+                    :data-categoryName="c1.categoryName"
+                    :data-category1Id="c1.categoryId"
+                    >{{ c1.categoryName }}</a
+                  >
+                </h3>
+                <div
+                  class="item-list clearfix"
+                  :style="{ display: currentIndex == index ? 'block' : 'none' }"
+                >
+                  <div
+                    class="subitem"
+                    v-for="(c2, index) in c1.categoryChild"
+                    :key="c2.categoryId"
+                  >
+                    <dl class="fore">
+                      <dt>
+                        <a
+                          :data-categoryName="c2.categoryName"
+                          :data-category2Id="c2.categoryId"
+                          >{{ c2.categoryName }}</a
+                        >
+                      </dt>
+                      <dd>
+                        <em
+                          v-for="(c3, index) in c2.categoryChild"
+                          :key="c3.categoryId"
+                        >
+                          <a
+                            :data-categoryName="c3.categoryName"
+                            :data-category3Id="c3.categoryId"
+                            >{{ c3.categoryName }}</a
+                          >
+                        </em>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </transition>
+      </div>
       <nav class="nav">
         <a href="###">服装城</a>
         <a href="###">美妆馆</a>
@@ -12,44 +67,6 @@
         <a href="###">有趣</a>
         <a href="###">秒杀</a>
       </nav>
-      <div class="sort">
-        <div class="all-sort-list2">
-          <div
-            class="item"
-            v-for="(c1, index) in categoryList"
-            :key="c1.categoryId"
-            :class="{ addbgc: currentIndex == index }"
-          >
-            <h3 @mouseenter="enterIndex(index)">
-              <a href="">{{ c1.categoryName }}---{{ index }}</a>
-            </h3>
-            <div
-              class="item-list clearfix"
-              :style="{ display: currentIndex == index ? 'block' : 'none' }"
-            >
-              <div
-                class="subitem"
-                v-for="(c2, index) in c1.categoryChild"
-                :key="c2.categoryId"
-              >
-                <dl class="fore">
-                  <dt>
-                    <a href="">{{ c2.categoryName }}</a>
-                  </dt>
-                  <dd>
-                    <em
-                      v-for="(c3, index) in c2.categoryChild"
-                      :key="c3.categoryId"
-                    >
-                      <a href="">{{ c3.categoryName }}</a>
-                    </em>
-                  </dd>
-                </dl>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -62,10 +79,15 @@ export default {
   data() {
     return {
       currentIndex: "-1",
+      sortShow: true,
     };
   },
   mounted() {
     this.$store.dispatch("getCategoryList");
+    // 组件一生成就判断是否展示 sort
+    if (this.$route.path == "/search") {
+      this.sortShow = false;
+    }
     // this.$store.dispatch("getMyCategoryList");
   },
   computed: {
@@ -77,21 +99,45 @@ export default {
     //防抖
     enterIndex: throttle(function (index) {
       this.currentIndex = index;
-      console.log("currentIndex" + this.currentIndex);
+      // console.log("currentIndex" + this.currentIndex);
     }, 50),
-    // _.debounce(function () {
-
-    // },1000),
-    //鼠标一进入就修改currentIndex值
-
-    // enterIndex(index) {
-    //   this.currentIndex = index;
-    //   console.log("currentIndex" + this.currentIndex);
-    // },
-    //鼠标移除修改currentIndex值
-    leaveIndex() {
+    enterSort() {
+      this.sortShow = true;
+    },
+    leaveSort() {
       this.currentIndex = -1;
-      console.log("leave  currentIndex" + this.currentIndex);
+      if (this.$route.path == "/search") {
+        this.sortShow = false;
+      }
+    },
+    goSearch(event) {
+      // 将事件委派到父节点上出现的问题:
+      // 1.无法确定点击的是否为 a 标签
+      // 给a标签绑定 :data-categoryName 确定其为 a 标签
+      // 2.无法获取点击的categoryName和categoryId
+      // 给a标签绑定 :data-categoryId 确定其要跳转的地址
+      // 3.无法确定往哪里跳转
+      //
+      let element = event.target;
+      let { categoryname, category1id, category2id, category3id } =
+        element.dataset;
+      if (categoryname) {
+        let location = { name: "search" };
+        let query = { categoryName: categoryname };
+        if (category1id) {
+          query.category1Id = category1id;
+        } else if (category2id) {
+          query.category2Id = category2id;
+        } else {
+          query.category3Id = category3id;
+        }
+        if (this.$route.params) {
+          location.params = this.$route.params;
+          location.query = query;
+        }
+        console.log(this.$route);
+        this.$router.push(location);
+      }
     },
   },
 };
@@ -217,6 +263,25 @@ export default {
           background-color: skyblue;
         }
       }
+    }
+
+    .sort-enter {
+      height: 0px;
+    }
+    .sort-enter-to {
+      height: 461px;
+    }
+    .sort-enter-active {
+      transition: all 0.3s linear;
+    }
+    .sort-leave {
+      height: 461px;
+    }
+    .sort-leave-to {
+      height: 0px;
+    }
+    .sort-leave-active {
+      transition: all 0.3s linear;
     }
   }
 }
