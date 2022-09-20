@@ -7,8 +7,8 @@
           <p>尚品汇欢迎您！</p>
           <p>
             <span>请</span>
-            <a href="###">登录</a>
-            <a href="###" class="register">免费注册</a>
+            <a href="###" @click="goLogin">登录</a>
+            <a href="###" class="register" @click="goRegistry">免费注册</a>
           </p>
         </div>
         <div class="typeList">
@@ -59,6 +59,11 @@ export default {
       keyword: "",
     };
   },
+  mounted() {
+    this.$bus.$on("clear", () => {
+      this.keyword = "";
+    });
+  },
   methods: {
     goSearch() {
       if (this.$route.query) {
@@ -68,10 +73,16 @@ export default {
             keyword: this.keyword || undefined,
           },
         };
-        W;
         location.query = this.$route.query;
         this.$router.push(location);
       }
+    },
+    goRegistry() {
+      //还未给网址params和query传递参数
+      this.$router.push("/registry");
+    },
+    goLogin() {
+      this.$router.push("/login");
     },
   },
 };

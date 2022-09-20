@@ -1,7 +1,33 @@
-const state = {};
-const mutations = {};
-const actions = {};
-const getters = {};
+import { repGetSearchInfo } from "@/api";
+const state = {
+  searchInfo: {},
+};
+const mutations = {
+  SEARCHINFO(state, data) {
+    state.searchInfo = data;
+  },
+};
+const actions = {
+  async getSearchInfo({ commit }, data) {
+    let result = await repGetSearchInfo(data);
+    // console.log(result);
+    if (result.code == 200) {
+      commit("SEARCHINFO", result.data);
+    }
+  },
+};
+const getters = {
+  goodsList(state) {
+    // console.log(state);
+    return state.searchInfo.goodsList;
+  },
+  attrsList(state) {
+    return state.searchInfo.attrsList;
+  },
+  trademarkList(state) {
+    return state.searchInfo.trademarkList;
+  },
+};
 export default {
   state,
   mutations,

@@ -106,7 +106,7 @@ export default {
     },
     leaveSort() {
       this.currentIndex = -1;
-      if (this.$route.path == "/search") {
+      if (this.$route.path != "/home") {
         this.sortShow = false;
       }
     },
@@ -135,8 +135,12 @@ export default {
           location.params = this.$route.params;
           location.query = query;
         }
-        console.log(this.$route);
-        this.$router.push(location);
+        // console.log(this.$route);
+        // if(this.$route.path != )
+        // this.$router.push(location);
+        this.$router.push(location).catch((err) => {
+          console.log("输出报错", err);
+        });
       }
     },
   },
