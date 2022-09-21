@@ -3,7 +3,7 @@
     <TypeNav />
     <div class="main">
       <div class="py-container">
-        <!--bread-->
+        <!--bread面包屑-->
         <div class="bread">
           <ul class="fl sui-breadcrumb">
             <li>
@@ -11,6 +11,9 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
+            <li class="with-x" v-if="searchParams.tmName">
+              {{ searchParams.tmName }}<i @click="removeTmName">×</i>
+            </li>
             <li class="with-x" v-if="searchParams.categoryName">
               {{ searchParams.categoryName
               }}<i @click="removeCategoryName">×</i>
@@ -19,34 +22,41 @@
             <li class="with-x" v-if="searchParams.keyword">
               {{ searchParams.keyword }}<i @click="removeKeyword">×</i>
             </li>
+            <li
+              class="with-x"
+              v-for="(attr, index) in searchParams.attrs"
+              :key="index"
+            >
+              {{ attr.split(":")[1] }}<i @click="removeAttr(index)">×</i>
+            </li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector />
+        <SearchSelector @clickAttr="addAttr" @clickTrademark="addTrademark" />
 
         <!--details-->
         <div class="details clearfix">
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li :class="{ active: isGeneral }" @click="clickGoodSort(1)">
+                  <a
+                    >综合<span
+                      v-show="isGeneral"
+                      class="iconfont"
+                      :class="{ 'icon-ic-up': isAsc, 'icon-ic-down': isDesc }"
+                    ></span
+                  ></a>
                 </li>
-                <li>
-                  <a href="#">销量</a>
-                </li>
-                <li>
-                  <a href="#">新品</a>
-                </li>
-                <li>
-                  <a href="#">评价</a>
-                </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+                <li :class="{ active: isPrice }" @click="clickGoodSort(2)">
+                  <a
+                    >价格<span
+                      v-show="isPrice"
+                      class="iconfont"
+                      :class="{ 'icon-ic-up': isAsc, 'icon-ic-down': isDesc }"
+                    ></span
+                  ></a>
                 </li>
               </ul>
             </div>
@@ -96,35 +106,7 @@
               </li>
             </ul>
           </div>
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted"><span>...</span></li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div><span>共10页&nbsp;</span></div>
-            </div>
-          </div>
+          <Pagination />
         </div>
       </div>
     </div>
@@ -134,6 +116,7 @@
 <script>
 import SearchSelector from "./SearchSelector/SearchSelector";
 import { mapGetters } from "vuex";
+import Pagination from "../../components/Pagination/index.vue";
 export default {
   name: "Search",
   data() {
@@ -146,6 +129,8 @@ export default {
         createTime: "",
         tmId: "",
         tmName: "",
+        // 查询参数默认:综合,降序
+        order: "1:desc",
         category1Id: "",
         category1Name: "",
         category2Id: "",
@@ -153,12 +138,13 @@ export default {
         category3Id: "",
         category3Name: "",
         hotScore: "",
-        attrs: "",
+        attrs: [],
       },
     };
   },
   components: {
     SearchSelector,
+    Pagination,
   },
   beforeMount() {
     Object.assign(this.searchParams, this.$route.query, this.$route.params);
@@ -168,6 +154,18 @@ export default {
   },
   computed: {
     ...mapGetters(["goodsList"]),
+    isGeneral() {
+      return this.searchParams.order.indexOf("1") != -1;
+    },
+    isPrice() {
+      return this.searchParams.order.indexOf("2") != -1;
+    },
+    isAsc() {
+      return this.searchParams.order.indexOf("asc") != -1;
+    },
+    isDesc() {
+      return this.searchParams.order.indexOf("desc") != -1;
+    },
   },
   methods: {
     getGoodsData() {
@@ -192,6 +190,38 @@ export default {
       }
       this.getGoodsData();
       this.$bus.$emit("clear");
+    },
+    removeAttr(index) {
+      this.searchParams.attrs.splice(index, 1);
+      this.getGoodsData();
+    },
+    addAttr(attr, attrValue) {
+      let prop = `${attr.attrId}:${attrValue}:${attr.attrName}`;
+      if (this.searchParams.attrs.indexOf(prop) == -1)
+        this.searchParams.attrs.push(prop);
+      this.getGoodsData();
+    },
+    addTrademark(trademark) {
+      this.searchParams.tmName = trademark;
+      this.getGoodsData();
+    },
+    removeTmName() {
+      this.searchParams.tmName = undefined;
+      this.getGoodsData();
+    },
+    clickGoodSort(flag) {
+      // flag:标记用户点击的是综合(1)或价格(2)
+      let originOrder = this.searchParams.order;
+      let originFlag = originOrder.split(":")[0];
+      let originSort = originOrder.split(":")[1];
+      let newOrder = "";
+      if (originFlag == flag) {
+        newOrder = `${flag}:${originSort == "desc" ? "asc" : "desc"}`;
+      } else {
+        newOrder = `${flag}:${"desc"}`;
+      }
+      this.searchParams.order = newOrder;
+      this.getGoodsData();
     },
   },
   watch: {

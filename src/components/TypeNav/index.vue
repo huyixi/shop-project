@@ -137,10 +137,10 @@ export default {
         }
         // console.log(this.$route);
         // if(this.$route.path != )
-        // this.$router.push(location);
-        this.$router.push(location).catch((err) => {
-          console.log("输出报错", err);
-        });
+        this.$router.push(location);
+        // this.$router.push(location).catch((err) => {
+        //   console.log("输出报错", err);
+        // });
       }
     },
   },

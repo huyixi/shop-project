@@ -4,7 +4,11 @@
       <div class="fl key brand">品牌</div>
       <div class="value logos">
         <ul class="logo-list">
-          <li v-for="(trademark, index) in trademarkList" :key="trademark.tmId">
+          <li
+            v-for="(trademark, index) in trademarkList"
+            :key="trademark.tmId"
+            @click="clickTrademark(trademark.tmName)"
+          >
             {{ trademark.tmName }}
           </li>
         </ul>
@@ -14,6 +18,7 @@
         <a href="javascript:void(0);">更多</a>
       </div>
     </div>
+    <!-- 可选筛选项 -->
     <div
       class="type-wrap"
       v-for="(attr, index) in attrsList"
@@ -22,13 +27,18 @@
       <div class="fl key">{{ attr.attrName }}</div>
       <div class="fl value">
         <ul class="type-list">
-          <li v-for="(attrValue, index) in attr.attrValueList" :key="index">
+          <li
+            v-for="(attrValue, index) in attr.attrValueList"
+            :key="index"
+            @click="clickAttr(attr, attrValue)"
+          >
             <a>{{ attrValue }}</a>
           </li>
         </ul>
       </div>
       <div class="fl ext"></div>
     </div>
+    <!-- 更多筛选项  -->
     <div class="type-wrap">
       <div class="fl key">更多筛选项</div>
       <div class="fl value">
@@ -61,6 +71,14 @@ export default {
   name: "SearchSelector",
   computed: {
     ...mapGetters(["attrsList", "trademarkList"]),
+  },
+  methods: {
+    clickAttr(attr, attrValue) {
+      this.$emit("clickAttr", attr, attrValue);
+    },
+    clickTrademark(trademark) {
+      this.$emit("clickTrademark", trademark);
+    },
   },
 };
 </script>
