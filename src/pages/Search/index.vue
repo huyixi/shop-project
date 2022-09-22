@@ -106,8 +106,15 @@
               </li>
             </ul>
           </div>
-          <Pagination />
         </div>
+        <!-- 分页器  -->
+        <Pagination
+          :continues="5"
+          :total="total"
+          :pageSize="searchParams.pageSize"
+          :curPage="searchParams.pageNo"
+          @getPageNo="getPageNo"
+        />
       </div>
     </div>
   </div>
@@ -115,8 +122,7 @@
 
 <script>
 import SearchSelector from "./SearchSelector/SearchSelector";
-import { mapGetters } from "vuex";
-import Pagination from "../../components/Pagination/index.vue";
+import { mapGetters, mapState } from "vuex";
 export default {
   name: "Search",
   data() {
@@ -138,13 +144,14 @@ export default {
         category3Id: "",
         category3Name: "",
         hotScore: "",
+        pageNo: "1",
+        pageSize: "5",
         attrs: [],
       },
     };
   },
   components: {
     SearchSelector,
-    Pagination,
   },
   beforeMount() {
     Object.assign(this.searchParams, this.$route.query, this.$route.params);
@@ -154,6 +161,9 @@ export default {
   },
   computed: {
     ...mapGetters(["goodsList"]),
+    ...mapState({
+      total: (state) => state.search.searchInfo.total,
+    }),
     isGeneral() {
       return this.searchParams.order.indexOf("1") != -1;
     },
@@ -221,6 +231,11 @@ export default {
         newOrder = `${flag}:${"desc"}`;
       }
       this.searchParams.order = newOrder;
+      this.getGoodsData();
+    },
+    getPageNo(pageNo) {
+      console.log(pageNo);
+      this.searchParams.pageNo = pageNo;
       this.getGoodsData();
     },
   },

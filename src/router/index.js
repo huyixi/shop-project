@@ -20,7 +20,7 @@ export default new VueRouter({
   routes: [
     {
       path: "/",
-      redirect: "/home",
+      redirect: "/search",
       meta: {
         show: true,
       },
