@@ -85,7 +85,7 @@ export default {
   mounted() {
     this.$store.dispatch("getCategoryList");
     // 组件一生成就判断是否展示 sort
-    if (this.$route.path == "/search") {
+    if (this.$route.path != "/home") {
       this.sortShow = false;
     }
     // this.$store.dispatch("getMyCategoryList");
@@ -106,9 +106,7 @@ export default {
     },
     leaveSort() {
       this.currentIndex = -1;
-      if (this.$route.path != "/home") {
-        this.sortShow = false;
-      }
+      if (this.$route.path != "/home") this.sortShow = false;
     },
     goSearch(event) {
       // 将事件委派到父节点上出现的问题:
@@ -285,7 +283,7 @@ export default {
       height: 0px;
     }
     .sort-leave-active {
-      transition: all 0.3s linear;
+      transition: all 0.1s linear;
     }
   }
 }

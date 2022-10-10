@@ -16,6 +16,9 @@ export const reqGetFloorList = () =>
 export const repGetSearchInfo = (params) =>
   requests({ url: "/list", method: "post", data: params });
 
+export const reqGetGoodDetail = (skuId) =>
+  requests({ url: `/item/${skuId}`, method: "get" });
+
 export const reqGetCode = (phone) =>
   requests({ url: `/user/passport/sendCode/${phone}`, method: "get" });
 //注册接口
