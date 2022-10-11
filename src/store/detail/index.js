@@ -1,6 +1,8 @@
-import { reqGetGoodDetail } from "@/api";
+import { reqGetGoodDetail, reqAddOrUpdateShopcar } from "@/api";
+import { getUUID } from "@/utils/uuid_token";
 const state = {
   goodDetail: {},
+  uuid_token: getUUID(),
 };
 const mutations = {
   GETGOODDETAIL(state, goodDetail) {
@@ -13,6 +15,9 @@ const actions = {
     if (result.code == 200) {
       commit("GETGOODDETAIL", result.data);
     }
+  },
+  async addOrUpdateShopcar({ commit }, { skuId, skuNum }) {
+    let result = await reqAddOrUpdateShopcar(skuId, skuNum);
   },
 };
 const getters = {

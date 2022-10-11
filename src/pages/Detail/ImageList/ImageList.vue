@@ -46,6 +46,7 @@ export default {
   methods: {
     changeCurrentIndex(index) {
       this.currentIndex = index;
+      console.log("currentIndex" + this.currentIndex);
       // 通知放大器Zoom组件修改索引值
       this.$bus.$emit("getIndex", index);
     },

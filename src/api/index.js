@@ -24,3 +24,7 @@ export const reqGetCode = (phone) =>
 //注册接口
 export const reqUserRegister = (data) =>
   requests({ url: "/user/passport/register", data, method: "post" });
+export const reqAddOrUpdateShopcar = (skuId, skuNum) =>
+  requests({ url: `/cart/addToCart/${skuId}/${skuNum}`, method: "post" });
+export const reqGetShopcartList = () =>
+  requests({ url: "/cart/cartList", method: "get" });

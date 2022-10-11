@@ -4,6 +4,8 @@ import Search from "../pages/Search/index.vue";
 import Registry from "../pages/Registry/index.vue";
 import Login from "../pages/Login/index.vue";
 import Detail from "../pages/Detail/";
+import AddCartSuccess from "../pages/AddCartSuccess";
+import ShopCart from "../pages/ShopCart";
 export default [
   {
     path: "/",
@@ -23,6 +25,14 @@ export default [
     path: "/search/:keyword?",
     name: "search",
     component: Search,
+    meta: {
+      show: true,
+    },
+  },
+  {
+    path: "/addcartsuccess",
+    name: "addcartsuccess",
+    component: AddCartSuccess,
     meta: {
       show: true,
     },
@@ -48,6 +58,13 @@ export default [
     component: Detail,
     meta: {
       show: false,
+    },
+  },
+  {
+    path: "/shopcart",
+    component: ShopCart,
+    meta: {
+      show: true,
     },
   },
 ];

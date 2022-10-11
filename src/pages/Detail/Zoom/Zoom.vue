@@ -1,11 +1,11 @@
 <template>
   <div class="spec-preview">
     <img :src="imgUrl" />
-    <div class="event"></div>
+    <div class="event" @mousemove="handler"></div>
+    <div class="mask" ref="mask"></div>
     <div class="big">
-      <img :src="imgUrl" />
+      <img ref="bigImg" :src="imgUrl" />
     </div>
-    <div class="mask"></div>
   </div>
 </template>
 
@@ -20,13 +20,31 @@ export default {
   },
   computed: {
     imgUrl() {
-      return this.skuImageList[this.currentIndex].imgUrl || "";
+      if (this.skuImageList) {
+        return this.skuImageList[this.currentIndex].imgUrl;
+      }
     },
   },
   mounted() {
     this.$bus.$on("getIndex", (index) => {
       this.currentIndex = index;
     });
+  },
+  methods: {
+    handler(event) {
+      let mask = this.$refs.mask;
+      let bigImg = this.$refs.bigImg;
+      let left = event.offsetX - mask.offsetWidth / 2;
+      let top = event.offsetY - mask.offsetHeight / 2;
+      if (left <= 0) left = 0;
+      if (left >= mask.offsetWidth) left = mask.offsetWidth;
+      if (top <= 0) top = 0;
+      if (top >= mask.offsetHeight) top = mask.offsetHeight;
+      mask.style.left = left + "px";
+      mask.style.top = top + "px";
+      bigImg.style.left = -2 * left + "px";
+      bigImg.style.top = -2 * top + "px";
+    },
   },
 };
 </script>

@@ -10,7 +10,6 @@ const mutations = {
 const actions = {
   async getSearchInfo({ commit }, data) {
     let result = await repGetSearchInfo(data);
-    // console.log(result);
     if (result.code == 200) {
       commit("SEARCHINFO", result.data);
     }
@@ -18,7 +17,6 @@ const actions = {
 };
 const getters = {
   goodsList(state) {
-    // console.log(state);
     return state.searchInfo.goodsList;
   },
   attrsList(state) {
