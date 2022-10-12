@@ -115,8 +115,6 @@ export default {
       if (type == "change") {
         changeNum -= cart.skuNum;
       }
-      // let skuId = 0;
-      // skuId = cart.skuId;
       this.$store.dispatch("addOrUpdateShopcar", {
         skuId: cart.skuId,
         skuNum: changeNum,
