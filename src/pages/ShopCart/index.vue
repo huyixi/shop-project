@@ -50,7 +50,7 @@
             <span class="sum">{{ cart.skuNum * cart.skuPrice }}</span>
           </li>
           <li class="cart-list-con7">
-            <a href="#none" class="sindelet">删除</a>
+            <a class="sindelet" @click="deleteCart(cart.skuId)">删除</a>
             <br />
             <a href="#none">移到收藏</a>
           </li>
@@ -86,7 +86,7 @@ import { mapGetters } from "vuex";
 export default {
   name: "ShopCart",
   mounted() {
-    this.$store.dispatch("getShopcartList");
+    this.getData();
   },
   computed: {
     ...mapGetters(["cartInfoList"]),
@@ -111,6 +111,9 @@ export default {
     },
   },
   methods: {
+    getData() {
+      this.$store.dispatch("getShopcartList");
+    },
     handler(type, cart, changeNum) {
       if (type == "change") {
         changeNum -= cart.skuNum;
@@ -120,6 +123,10 @@ export default {
         skuNum: changeNum,
       });
       cart.skuNum += changeNum;
+    },
+    deleteCart(skuId) {
+      this.$store.dispatch("deleteCart", skuId);
+      this.getData();
     },
   },
 };

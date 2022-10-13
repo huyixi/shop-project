@@ -1,4 +1,4 @@
-import { reqGetShopcartList } from "@/api";
+import { reqGetShopcartList, reqDeleteCartById } from "@/api";
 import { getUUID } from "@/utils/uuid_token";
 const state = {
   uuid_token: getUUID(),
@@ -13,6 +13,10 @@ const actions = {
   async getShopcartList({ commit }) {
     let result = await reqGetShopcartList();
     commit("GETSHOPCARTLIST", result.data);
+  },
+  async deleteCart({ commit }, skuId) {
+    let result = await reqDeleteCartById(skuId);
+    console.log(result);
   },
 };
 const getters = {
