@@ -1,4 +1,4 @@
-import { reqGetShopcartList, reqDeleteCartById } from "@/api";
+import { reqGetShopcartList, reqDeleteCartById, reqUpdateChecked } from "@/api";
 import { getUUID } from "@/utils/uuid_token";
 const state = {
   uuid_token: getUUID(),
@@ -16,7 +16,24 @@ const actions = {
   },
   async deleteCart({ commit }, skuId) {
     let result = await reqDeleteCartById(skuId);
-    console.log(result);
+    // if (result.code == "200") {
+    //   return "ok";
+    // } else {
+    //   return Promise.reject(new Error("faile"));
+    // }
+  },
+  async updateChecked({ commit }, { skuId, isChecked }) {
+    let result = await reqUpdateChecked(skuId, isChecked);
+    // if (result.code == "200") {
+    //   return "ok";
+    // } else {
+    //   return Promise.reject(new Error("faile"));
+    // }
+  },
+  deleteSelectedCart({ getters, dispatch }) {
+    getters.cartInfoList.forEach((item) => {
+      item.isChecked == 1 ? dispatch("deleteCart", item.skuId) : "";
+    });
   },
 };
 const getters = {

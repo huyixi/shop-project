@@ -13,7 +13,12 @@
       <div class="cart-body">
         <ul class="cart-list" v-for="(cart, index) in cartList" :key="cart.id">
           <li class="cart-list-con1">
-            <input type="checkbox" name="chk_list" :checked="cart.isChecked" />
+            <input
+              type="checkbox"
+              name="chk_list"
+              :checked="cart.isChecked"
+              @change="changeCartChecked(cart, $event)"
+            />
           </li>
           <li class="cart-list-con2">
             <img :src="cart.imgUrl" />
@@ -63,7 +68,7 @@
         <span>全选</span>
       </div>
       <div class="option">
-        <a href="#none">删除选中的商品</a>
+        <a @click="deleteSelectedCart">删除选中的商品</a>
         <a href="#none">移到我的关注</a>
         <a href="#none">清除下柜商品</a>
       </div>
@@ -103,12 +108,6 @@ export default {
     isAllChecked() {
       return this.cartList.every((item) => item.isChecked == 1);
     },
-    cartNum() {
-      let sum = 0;
-      // this.cartList.forEach((element) => {
-      //   sum += element
-      // })
-    },
   },
   methods: {
     getData() {
@@ -127,6 +126,17 @@ export default {
     deleteCart(skuId) {
       this.$store.dispatch("deleteCart", skuId);
       this.getData();
+    },
+    changeCartChecked(cart, event) {
+      let isChecked = event.target.checked ? "0" : "1";
+      this.$store.dispatch("updateChecked", {
+        skuId: cart.skuId,
+        isChecked: isChecked,
+      });
+      this.getData();
+    },
+    deleteSelectedCart() {
+      this.$store.dispatch("deleteSelectedCart");
     },
   },
 };
